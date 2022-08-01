@@ -90,7 +90,15 @@ def mean_class_accuracy(scores, labels):
         [hit / cnt if cnt else 0.0 for cnt, hit in zip(cls_cnt, cls_hit)])
 
     return mean_class_acc
+def accuracy_per_class(scores,labels):
+    pred = np.argmax(scores, axis=1)
+    cf_mat = confusion_matrix(pred, labels).astype(float)
 
+    cls_cnt = cf_mat.sum(axis=1)
+    cls_hit = np.diag(cf_mat)
+    hit_ratio = np.array(
+        [hit / cnt if cnt else 0.0 for cnt, hit in zip(cls_cnt, cls_hit)])
+    return hit_ratio,cf_mat
 
 def top_k_classes(scores, labels, k=10, mode='accurate'):
     """Calculate the most K accurate (inaccurate) classes.
